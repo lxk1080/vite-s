@@ -12,6 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/lxk1080/vite-s.git"
   },
+  "browserslist": [
+    "last 2 version",
+    "> 1%",
+    "not dead",
+    "IE 10"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,6 +26,9 @@
   },
   "homepage": "https://github.com/lxk1080/vite-s#readme",
   "devDependencies": {
+    "@csstools/postcss-global-data": "^2.1.1",
+    "less": "^4.2.0",
+    "postcss-preset-env": "^9.5.5",
     "vite": "^5.2.9"
   },
   "dependencies": {

@@ -1,0 +1,10 @@
+.header {
+  .title {
+    display: inline-block;
+    font-size: 32px / 2; // 测试 less 中的 math 配置
+    color: @blackColor; // 在 vite 中有定义这个变量
+    user-select: none; // 测试 postcss 前缀补全（如果没生效，可能是当前浏览器已经支持该特性）
+    width: clamp(100px, 30%, 200px); // 测试 postcss 语法降级。这个是 css 的新提案，意思是：宽度 30%，但是最小不能小于 100px，最大不能大于 200px
+    margin-bottom: var(--twoPixel); // 测试 postcss 语法解析（会直接将变量的值解析出来显示）
+  }
+}
