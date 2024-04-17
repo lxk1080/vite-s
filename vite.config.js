@@ -95,5 +95,8 @@ export default defineConfig(({ command, mode }) => {
       },
       assetsInlineLimit: 20 * 1024, // 小于 20kb 的图片转化成 base64
     },
+    plugins: [
+      // ...
+    ],
   }
 })
