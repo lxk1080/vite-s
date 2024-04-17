@@ -30,6 +30,12 @@ export default defineConfig(({ command, mode }) => {
   console.log('env ==>', env)
 
   return {
+    resolve: {
+      // 配置路径别名
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
     optimizeDeps: {
       // exclude: ['lodash-es'], // 将数组中指定的依赖不进行依赖预构建，这将会产生大量的依赖请求
     },
@@ -74,6 +80,20 @@ export default defineConfig(({ command, mode }) => {
           postcssPresetEnv(),
         ],
       },
+    },
+    // 生产配置，只对打包输出时有效
+    build: {
+      outDir: 'dist', // 可以修改默认的输出目录
+      rollupOptions: {
+        output: {
+          // 入口 js 文件名（默认生成的 hash 有时后面带横杆，这是正常的）
+          //  - 如果不想看到横杆，可以将 hashCharacters 设置为 base36 就没了，默认的是 base64
+          entryFileNames: 'js/[name]-[hash].js',
+          assetFileNames: 'static/[name]-[hash][extname]', // 输出的资源文件名称
+          // hashCharacters: 'base36', // 生成 hash 字符串的长度
+        },
+      },
+      assetsInlineLimit: 20 * 1024, // 小于 20kb 的图片转化成 base64
     },
   }
 })

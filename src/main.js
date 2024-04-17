@@ -5,12 +5,16 @@ import './css/variables.css'
 import cssModuleA from './css/a.module.css'
 import cssModuleB from './css/b.module.css'
 import lessModuleA from './less/a.module.less'
+import pictureUrl from '@/imgs/01.png?url'
+import lightMp4 from '@/media/light_pollution.mp4'
+import viteSvg from '@/svg/vite.svg?raw'
+import jsonContent, { name } from '@/json/index.json'
 
 // 获取环境变量
 const env = import.meta.env
-
 console.log(`hello ${env.APP_NAME}`)
 
+// ES Module + 依赖预构建
 console.log(count(100, 200))
 console.log(_.random(0, 10))
 console.log(_es.random(0, 10))
@@ -22,3 +26,36 @@ console.log('lessModuleA ==>', lessModuleA)
 document.getElementById('footer').className = cssModuleB.footer
 document.getElementById('header').className = lessModuleA.header
 document.getElementById('title').className = lessModuleA.title
+
+// 图片导入默认是 url，可以自行改变引入类型
+const img = new Image()
+img.src = pictureUrl
+document.body.appendChild(img)
+
+// 视频资源和图片是一样的，也是 url
+;(function createVideo() {
+  const video = document.createElement('video')
+  video.width = 400
+  video.autoplay = 'autoplay'
+  video.muted = 'muted'
+  video.controls = 'controls'
+  video.dataset.name = '光污染'
+  video.style.marginLeft = '10px'
+  const source = document.createElement('source')
+  source.type = 'video/mp4'
+  source.src = lightMp4
+  video.append(source)
+  document.body.append(video)
+})()
+
+// 对于 svg 直接引入也是 url，可以放到 img.src 使用，但是我们一般还是选择直接渲染 svg 组件，所以使用 raw 方式导出字符串形式
+// 使用 document.createRange().createContextualFragment() 将字符串转化成 dom 节点
+document.body.appendChild(document.createElement('br'))
+document.body.appendChild(document.createRange().createContextualFragment(viteSvg))
+const svg = document.getElementsByTagName('svg')[0]
+svg.addEventListener('mouseover', function () { this.style.fill = 'blue' })
+svg.addEventListener('mouseout', function () { this.style.fill = 'black' })
+
+// json 直接可用，并且可以按字段导入（解构）
+console.log('jsonContent ==>', jsonContent)
+console.log('name ==>', name)
