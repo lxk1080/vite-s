@@ -2,6 +2,10 @@ import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import postcssPresetEnv from 'postcss-preset-env'
 import postcssGlobalData from '@csstools/postcss-global-data'
+import { viteMockServe } from 'vite-plugin-mock'
+import autoAlias from './plugins/vite-plugin-auto-alias'
+import viteHtml from './plugins/vite-plugin-html'
+import viteMock from './plugins/vite-plugin-mock'
 
 export default defineConfig(({ command, mode }) => {
   // 开发环境是 serve，生产环境是 build，取决于 vite 的执行命令，可以通过这个参数给开发和生产分开做配置
@@ -96,7 +100,29 @@ export default defineConfig(({ command, mode }) => {
       assetsInlineLimit: 20 * 1024, // 小于 20kb 的图片转化成 base64
     },
     plugins: [
-      // ...
+      // 可以自动生成路径别名（自定义插件）
+      autoAlias({
+        rootPath: path.resolve(__dirname, './src'),
+        keyName: '@',
+      }),
+
+      // 可以对 html 模板进行操作（自定义插件）
+      viteHtml({
+        inject: {
+          data: {
+            title: 'Vite',
+            content: 'middle',
+          },
+        },
+      }),
+
+      // 可以让我们使用 mock 数据的插件
+      // 需要在根目录创建文件夹 mock，然后在里面创建文件写 mock 代码
+      // 此插件是依赖于 mockjs 库的
+      // viteMockServe(),
+
+      // 支持 mock 数据的使用（自定义插件）
+      viteMock(),
     ],
   }
 })

@@ -22,8 +22,11 @@
       - 而 vite 是基于 es modules 的，更关注浏览器端的开发体验
     - 打包流程
       - 可以关注 vite 官方给的图
-      - webpack 是先把所有模块都解析完，然后交给浏览器
-      - vite 是 **按需打包**，只处理浏览器需要的模块
+      - webpack 是先把所有模块都解析完，打包，然后交给浏览器
+      - vite 是 **按需处理**，只处理浏览器需要的模块，在开发环境，是没有打包这个操作的
+        - 在大部分情况下，vite 都会将模块内容替换成 js 代码，并导出 vite 处理后的数据（这也有利于 vite 去做不同模块的热更新）
+        - 我们可以通过 Network 看到 vite 项目中请求的 css、vue 等文件内，写的都是 vite 处理后的 js 代码
+        - 相比 webpack，vite 的这种处理，让我们在调试代码时，看到的文件结构更加清晰了
 
 3. vite 脚手架
     - 首先 `npm create vite` 是什么？
@@ -36,7 +39,7 @@
     - 你需要在 html 文件中手动添加具有 ES Module 标识的 script 标签，并引入 js 文件，这个 js 文件就相当于 webpack 的 entry 配置
     - 在构建时，vite 会自动在 html 中替换构建后的入口 js 文件路径
 
-6. vite 依赖预构建
+5. vite 依赖预构建
     - 现代浏览器支持 ES Module，只需要在加载 js 的 script 上加上属性 type 为 module 即可
     - 但是浏览器不支持引用 node_modules 内的包，例如你在文件内写上 `import _ from 'lodash'`，浏览器是无法解析的，会报错，为什么？
       - 如果浏览器支持解析的话，那第三方包内可能还依赖其它的第三方包，其它的第三方包又依赖其它，这样的话，浏览器将会发送成百上千个请求去获取这些文件，浏览器会炸！
@@ -53,18 +56,18 @@
         - 可以配置：`optimizeDeps.exclude: ['xxx']`，让 vite 排除对指定依赖的预构建，那么此依赖内的其它依赖包将会被逐个请求
         - 有了依赖预构建以后，无论依赖包有多少个额外的 export 或 import，vite 都会尽可能的将它们集成，最后只生成一个或几个模块，大大减少了请求次数
 
-7. vite 的配置文件
+6. vite 的配置文件
     - 为什么在 vite.config.js 中可以写 es module 语法？它难道不是由 node 执行吗？
       - 肯定是 node 执行，因为 vite 在读取 vite.config.js 的时候，会率先去解析文件语法，如果发现是 esm 规范，会直接将 esm 规范替换成 commonjs 规范
         - 但在 node 最新版本中，已经逐渐支持 esm 规范了，如果直接就支持的话，应该就不会做转换了
 
-8. vite 是如何让浏览器可以识别 .vue 文件的？
+7. vite 是如何让浏览器可以识别 .vue 文件的？
     - 这个其实偏向小白哈，浏览器可以加载 .vue 的文件，是因为浏览器向服务器要了这个文件，服务器就给了（这里是 vite 中的开发服务器）
     - 至于为什么能执行 .vue 文件，是因为服务器返回的这个文件，它的 Content-Type 是 text/javascript，浏览器就当 js 文件处理了
     - 事实上这个 .vue 文件里面确实是 js 代码，是由 vite 编译过的，而浏览器和服务器不会管你文件名叫什么，它们只关注文件类型是啥
     - 服务器在返回文件时，响应头会给出文件类型，而浏览器就根据文件类型去处理文件，就这么简单
 
-9. vite 中的 css 处理
+8. vite 中的 css 处理
    - 首先以 `.module.css` 结尾的文件会开启 css 模块化（是一种命名约定）
      - 将类名进行一定规则的替换（例如将 `.footer` 换成 `._footer_i91mu_1`）
      - 同时创建一个映射对象 `{ footer: '_footer_i91mu_1' }`
@@ -76,7 +79,20 @@
      - 所以目前 postcss 主要被用来做 css 语法降级、前缀补全，解决不同浏览器的兼容问题
      - 在 vite 中使用 postcss 非常简单，不需要额外安装任何包，只需要通过 `css.postcss` 直接进行配置即可
 
-10. vite 中处理静态资源
-     - 像图片视频这样的静态资源默认都会导出 url，可以自行修改其导出的数据类型
-     - 对于 json 文件，导出即可用，并且支持解构引用当中的某个字段
-     - 对于 svg 文件，可以使用 raw 方式导出字符串使用
+9. vite 中处理静态资源
+    - 像图片视频这样的静态资源默认都会导出 url，可以自行修改其导出的数据类型
+    - 对于 json 文件，导出即可用，并且支持解构引用当中的某个字段
+    - 对于 svg 文件，可以使用 raw 方式导出字符串使用
+
+10. vite 中的自定义插件
+    - 相比 webpack，更简单了，而且官方文档写的也很详细：https://cn.vitejs.dev/guide/api-plugin.html
+    - 手写几个自定义插件：
+      - `vite-plugin-auto-alias`
+        - 作用：自动配置路径别名
+        - 代码：[vite-plugin-auto-alias](./plugins/vite-plugin-auto-alias/index.js)
+      - `vite-plugin-html`
+        - 作用：操作 html 模板
+        - 代码：[vite-plugin-html](./plugins/vite-plugin-html/index.js)
+      - `vite-plugin-mock`
+        - 作用：支持使用 mock 数据
+        - 代码：[vite-plugin-mock](./plugins/vite-plugin-mock/index.js)

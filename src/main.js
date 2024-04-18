@@ -1,14 +1,14 @@
-import count from './js/count'
 import _ from 'lodash'
 import _es from 'lodash-es'
+import count from './js/count'
 import './css/variables.css'
-import cssModuleA from './css/a.module.css'
-import cssModuleB from './css/b.module.css'
-import lessModuleA from './less/a.module.less'
-import pictureUrl from '@/imgs/01.png?url'
-import lightMp4 from '@/media/light_pollution.mp4'
-import viteSvg from '@/svg/vite.svg?raw'
-import jsonContent, { name } from '@/json/index.json'
+import cssModuleA from '@/css/a.module.css'
+import cssModuleB from '@/css/b.module.css'
+import lessModuleA from '@/less/a.module.less'
+import pictureUrl from '@imgs/01.png?url'
+import lightMp4 from '@media/light_pollution.mp4'
+import viteSvg from '@svg/vite.svg?raw'
+import jsonContent, { name } from '@json/index.json'
 
 // 获取环境变量
 const env = import.meta.env
@@ -59,3 +59,13 @@ svg.addEventListener('mouseout', function () { this.style.fill = 'black' })
 // json 直接可用，并且可以按字段导入（解构）
 console.log('jsonContent ==>', jsonContent)
 console.log('name ==>', name)
+
+// 测试 mock 功能（需要 vite-plugin-mock 插件或我们的自定义插件）
+fetch('/api/list', { method: 'post' })
+  .then((res) => {
+    res.json().then((data) =>{
+      console.log('data ==>', data)
+    })
+  }).catch((err) => {
+    console.log('err ==>', err)
+  })
