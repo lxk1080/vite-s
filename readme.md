@@ -96,3 +96,8 @@
       - `vite-plugin-mock`
         - 作用：支持使用 mock 数据
         - 代码：[vite-plugin-mock](./plugins/vite-plugin-mock/index.js)
+
+11. vite 中对 ts 的支持
+    - 首先，vite 天生就是支持 ts 的，但是 ts 报错时，如果不进行额外的配置，还是会正常打包运行，不会造成堵塞
+      - 如果想让 ts 报错造成阻塞，需要安装插件：`vite-plugin-checker`（这个插件依赖于 typescript 库），并在 vite.config.js 进行配置
+    - 配置 `vite-env.d.ts` 文件可以声明 .env 内定义的变量，这样在写 `import.meta.env` 时，就会有代码提示

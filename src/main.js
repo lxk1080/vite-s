@@ -9,6 +9,7 @@ import pictureUrl from '@imgs/01.png?url'
 import lightMp4 from '@media/light_pollution.mp4'
 import viteSvg from '@svg/vite.svg?raw'
 import jsonContent, { name } from '@json/index.json'
+import str from './ts'
 
 // 获取环境变量
 const env = import.meta.env
@@ -69,3 +70,6 @@ fetch('/api/list', { method: 'post' })
   }).catch((err) => {
     console.log('err ==>', err)
   })
+
+// 测试 ts 的报错功能
+console.log('ts-str ==>', str)

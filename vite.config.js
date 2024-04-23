@@ -3,6 +3,7 @@ import path from 'path'
 import postcssPresetEnv from 'postcss-preset-env'
 import postcssGlobalData from '@csstools/postcss-global-data'
 import { viteMockServe } from 'vite-plugin-mock'
+import checker from 'vite-plugin-checker'
 import autoAlias from './plugins/vite-plugin-auto-alias'
 import viteHtml from './plugins/vite-plugin-html'
 import viteMock from './plugins/vite-plugin-mock'
@@ -100,6 +101,11 @@ export default defineConfig(({ command, mode }) => {
       assetsInlineLimit: 20 * 1024, // 小于 20kb 的图片转化成 base64
     },
     plugins: [
+      // 可以让 ts 报错阻塞运行
+      checker({
+        typescript: true,
+      }),
+
       // 可以自动生成路径别名（自定义插件）
       autoAlias({
         rootPath: path.resolve(__dirname, './src'),

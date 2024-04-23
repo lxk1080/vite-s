@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES5",
+    "sourceMap": true,
+    "skipLibCheck": true // 跳过声明文件的类型检查（扩展名为 .d.ts 的文件）
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
