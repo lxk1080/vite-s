@@ -61,13 +61,15 @@ svg.addEventListener('mouseout', function () { this.style.fill = 'black' })
 console.log('jsonContent ==>', jsonContent)
 console.log('name ==>', name)
 
-// 测试 mock 功能（需要 vite-plugin-mock 插件或我们的自定义插件）
-// 注意：这段代码在打包后运行会报错哈，咱们没有后端的
+// 测试 mock 功能（需要 vite-plugin-mock 插件或我们的自定义插件，开发环境下）
+// 在 vite 中有一个兼容，如果找不着这个接口的话，会默认返回 index.html 文件（生产环境也是一样）
 fetch('/api/list', { method: 'post' })
   .then((res) => {
-    res.json().then((data) =>{
-      console.log('data ==>', data)
-    })
+    if (import.meta.env.APP_ENV === 'dev') {
+      res.json().then((data) =>{
+        console.log('data ==>', data)
+      })
+    }
   }).catch((err) => {
     console.log('err ==>', err)
   })
@@ -75,7 +77,7 @@ fetch('/api/list', { method: 'post' })
 // 测试 ts 的报错功能
 console.log('ts-str ==>', str)
 
-// 测试下 proxy 的功能
+// 测试下 proxy 的功能（开发环境下）
 fetch('/baidu').then((res) => {
   console.log('%c proxy success!', 'color: green')
 })

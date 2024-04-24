@@ -6,4 +6,5 @@
 
 interface ImportMetaEnv {
   readonly APP_NAME: string
+  readonly APP_ENV: string
 }
