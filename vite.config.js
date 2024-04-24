@@ -99,6 +99,7 @@ export default defineConfig(({ command, mode }) => {
         },
       },
       assetsInlineLimit: 20 * 1024, // 小于 20kb 的图片转化成 base64
+      minify: false, // 关闭代码压缩
     },
     plugins: [
       // 可以让 ts 报错阻塞运行

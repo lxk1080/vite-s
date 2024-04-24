@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES5",
-    "sourceMap": true,
-    "skipLibCheck": true // 跳过声明文件的类型检查（扩展名为 .d.ts 的文件）
+    "moduleResolution": "Node", // 选择模块解析策略（使用 node 中的模块查找方式，也就是不写路径时，默认会逐层往上的在 node_modules 目录中查找）
+    "module": "ESNext", // 编译后的代码使用的模块化规范
+    "target": "ES6", // 编译成什么版本的 ECMAScript 代码
+    "sourceMap": true, // 是否生成 sourceMap
+    "skipLibCheck": true, // 跳过声明文件的类型检查（扩展名为 .d.ts 的文件）
   },
   "exclude": [
     "node_modules"
