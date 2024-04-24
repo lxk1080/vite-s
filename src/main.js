@@ -62,6 +62,7 @@ console.log('jsonContent ==>', jsonContent)
 console.log('name ==>', name)
 
 // 测试 mock 功能（需要 vite-plugin-mock 插件或我们的自定义插件）
+// 注意：这段代码在打包后运行会报错哈，咱们没有后端的
 fetch('/api/list', { method: 'post' })
   .then((res) => {
     res.json().then((data) =>{
@@ -73,3 +74,8 @@ fetch('/api/list', { method: 'post' })
 
 // 测试 ts 的报错功能
 console.log('ts-str ==>', str)
+
+// 测试下 proxy 的功能
+fetch('/baidu').then((res) => {
+  console.log('%c proxy success!', 'color: green')
+})

@@ -4,6 +4,8 @@ import postcssPresetEnv from 'postcss-preset-env'
 import postcssGlobalData from '@csstools/postcss-global-data'
 import { viteMockServe } from 'vite-plugin-mock'
 import checker from 'vite-plugin-checker'
+import compression from 'vite-plugin-compression'
+import CDNPlugin from 'vite-plugin-cdn-import'
 import autoAlias from './plugins/vite-plugin-auto-alias'
 import viteHtml from './plugins/vite-plugin-html'
 import viteMock from './plugins/vite-plugin-mock'
@@ -35,6 +37,8 @@ export default defineConfig(({ command, mode }) => {
   console.log('env ==>', env)
 
   return {
+    // 根目录，以下是默认值，vite 会在根目录下查找 index.html 文件作为入口
+    root: process.cwd(),
     resolve: {
       // 配置路径别名
       alias: {
@@ -86,16 +90,39 @@ export default defineConfig(({ command, mode }) => {
         ],
       },
     },
+    // 开发服务器相关配置
+    server: {
+      open: true, // 启动时打开浏览器（默认不开启）
+      port: 5173, // 是默认端口
+      hmr: true, // 热更新是默认开启的
+      proxy: {
+        '/baidu': {
+          target: 'https://www.baidu.com',
+          changeOrigin: true, // server 在发送请求时，修改请求头 origin 的值为 target，避免目标服务器的 origin 校验不通过
+          rewrite: (path) => path.replace(/^\/baidu/, ''), // 这个和 webpack 不一样哈，webpack 是一个对象
+        }
+      },
+    },
     // 生产配置，只对打包输出时有效
     build: {
       outDir: 'dist', // 可以修改默认的输出目录
       rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, './index.html'),
+        },
         output: {
           // 入口 js 文件名（默认生成的 hash 有时后面带横杆，这是正常的）
           //  - 如果不想看到横杆，可以将 hashCharacters 设置为 base36 就没了，默认的是 base64
-          entryFileNames: 'js/[name]-[hash].js',
-          assetFileNames: 'static/[name]-[hash][extname]', // 输出的资源文件名称
+          entryFileNames: 'js/[name].[hash].js',
+          chunkFileNames: 'js/[name].[hash].js', // 通过代码分割输出的文件名
+          assetFileNames: 'static/[name].[hash][extname]', // 输出的资源文件名称
           // hashCharacters: 'base36', // 生成 hash 字符串的长度
+          // 类似于 webpack 的 splitChunks 功能
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              return 'vender'
+            }
+          },
         },
       },
       assetsInlineLimit: 20 * 1024, // 小于 20kb 的图片转化成 base64
@@ -105,6 +132,20 @@ export default defineConfig(({ command, mode }) => {
       // 可以让 ts 报错阻塞运行
       checker({
         typescript: true,
+      }),
+
+      // 可以将打包生成的文件 gzip 压缩，减少前后端传递静态文件时的文件体积（需要后端配合）
+      compression(),
+
+      // 使用 CDN 加速，这个插件只在生产模式下生效
+      CDNPlugin({
+        modules: [
+          {
+            name: 'lodash', // 这个就是让 vite 打包时，不要把 lodash 打进去，原理就是操作了 rollupOptions.external
+            var: '_', // 定义个变量名称
+            path: 'https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.min.js', // CDN 地址会自动插入到 html 中
+          }
+        ],
       }),
 
       // 可以自动生成路径别名（自定义插件）
@@ -129,6 +170,7 @@ export default defineConfig(({ command, mode }) => {
       // viteMockServe(),
 
       // 支持 mock 数据的使用（自定义插件）
+      // 这个插件走在 server.proxy 之前
       viteMock(),
     ],
   }
