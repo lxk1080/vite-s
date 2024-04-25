@@ -47,6 +47,7 @@ export default defineConfig(({ command, mode }) => {
     },
     optimizeDeps: {
       // exclude: ['lodash-es'], // 将数组中指定的依赖不进行依赖预构建，这将会产生大量的依赖请求
+      // include: ['./src/cjs/index.js'], // 指定文件预构建，虽然是预构建了，但是在引入的地方并没有替换成预构建后的路径，使用无效，经查询，应该是个 bug
     },
     envPrefix: 'APP_', // 默认值：VITE_，只有具有此前缀的环境变量才能在开发代码中使用
     css: {

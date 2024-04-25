@@ -57,6 +57,18 @@
       - 网络多包传输的性能问题（这也是浏览器原生的 es module 不敢支持 node_modules 的原因之一）
         - 可以配置：`optimizeDeps.exclude: ['xxx']`，让 vite 排除对指定依赖的预构建，那么此依赖内的其它依赖包将会被逐个请求
         - 有了依赖预构建以后，无论依赖包有多少个额外的 export 或 import，vite 都会尽可能的将它们集成，最后只生成一个或几个模块，大大减少了请求次数
+    - 有几个点需要注意一下
+      - 默认情况下，vite 只会对 node_modules 里的包做依赖预构建，也就是说，如果你自己写了 commonjs 规范的代码并引用，由于代码未能预构建，在浏览器上将会报错
+        - 事实上 vite 提供了 `optimizeDeps.include` 配置，可以手动指定要预构建的文件，但这是个实验性的特性，似乎目前还有 bug
+        - 指定文件后，vite 确实会预构建此文件，并将其放到 `.vite/deps` 中，但是在引用的地方，vite 并未将引用路径修改成预构建后的，导致引用报错
+      - 当以下几个来源发生更改时，将会重新运行预构建
+        - 包管理器的锁文件内容，例如 package-lock.json、yarn.lock、pnpm-lock.yaml、bun.lockb
+        - 补丁文件夹的修改时间
+        - vite.config.js 中的相关字段
+        - NODE_ENV 的值
+      - 强制重新运行预构建
+        - 启动开发服务器时指定 --force 选项
+        - 手动删除 node_modules/.vite 缓存目录
 
 6. vite 的配置文件
     - 为什么在 vite.config.js 中可以写 es module 语法？它难道不是由 node 执行吗？

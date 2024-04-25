@@ -9,6 +9,7 @@ import pictureUrl from '@imgs/01.png?url'
 import lightMp4 from '@media/light_pollution.mp4'
 import viteSvg from '@svg/vite.svg?raw'
 import jsonContent, { name } from '@json/index.json'
+// import commomjsStr from './cjs' // 在运行时此处的路径并未被修改成预构建之后的文件路径
 import str from './ts'
 
 // 获取环境变量
@@ -81,3 +82,6 @@ console.log('ts-str ==>', str)
 fetch('/baidu').then((res) => {
   console.log('%c proxy success!', 'color: green')
 })
+
+// 测试下 commonjs 模块规范
+// console.log('commonjsStr ==>', commomjsStr())
