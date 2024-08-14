@@ -10,6 +10,15 @@ import autoAlias from './plugins/vite-plugin-auto-alias'
 import viteHtml from './plugins/vite-plugin-html'
 import viteMock from './plugins/vite-plugin-mock'
 
+/**
+ * 可以设置当前环境为生产环境，此设置可以避免 React 在严格模式 <StrictMode> 下渲染两次的问题
+ * 注意：在 .env 文件中设置 NODE_ENV=production 将会无效，因为 .env 文件的内容并不会覆盖掉 process.env.NODE_ENV
+ * 您也可以在 package.json 的 scripts 命令中添加 "cross-env NODE_ENV=production" 来设置当前环境
+ *  - 这是一个常规做法，每条命令可设置不同的 NODE_ENV 的值
+ *  - 需要安装 cross-env 包作为开发依赖
+ */
+// process.env.NODE_ENV = 'production'
+
 export default defineConfig(({ command, mode }) => {
   // 开发环境是 serve，生产环境是 build，取决于 vite 的执行命令，可以通过这个参数给开发和生产分开做配置
   console.log('command ==>', command)
