@@ -9,6 +9,7 @@
       - 提高项目性能：压缩文件、代码分割
       - 优化开发体验：热更新（HMR）、开发服务器（代理，解决跨域问题）
 
+
 2. vite 相比于 webpack 的优势
     - webpack 具有性能瓶颈，项目越大，webpack 需要处理的 js 代码就越多，需要很长时间才能启动开发服务器
     - 关于性能问题，webpack 能不能改？
@@ -28,10 +29,12 @@
         - 我们可以通过 Network 看到 vite 项目中请求的 css、vue 等文件内，写的都是 vite 处理后的 js 代码
         - 相比 webpack，vite 的这种处理，让我们在调试代码时，看到的文件结构更加清晰了
 
+
 3. vite 脚手架
     - 首先 `npm create vite` 是什么？
       - 其实就是使用 `create-vite` 这个脚手架初始化 vite 项目，相当于 `npx create-vite` 安装脚手架，然后执行安装包中 `bin` 目录下的文件
     - `npm create` 是 `npm init` 的别名
+
 
 4. vite 中的入口文件
     - 我们先来看看 webpack，它是以某一个 js 文件作为入口文件，然后需要一个 html 模板，最后将打包构建的 js bundle 以 script 标签形式插入到 html 中
@@ -40,6 +43,7 @@
     - 在构建时，vite 会自动在 html 中替换构建后的入口 js 文件路径
     - 为什么 vite 不像 webpack 一样搞个 js 作为入口文件？
       - 主要还是因为 vite 是按需加载的，你的 html 文件里面如果有 js 文件的引入，再做处理
+
 
 5. vite 依赖预构建
     - 现代浏览器支持 ES Module（引用相对路径的模块没问题，浏览器可以正常请求），只需要在加载 js 的 script 上加上属性 type 为 module 即可
@@ -74,16 +78,19 @@
         - 启动开发服务器时指定 --force 选项
         - 手动删除 node_modules/.vite 缓存目录
 
+
 6. vite 的配置文件
     - 为什么在 vite.config.js 中可以写 es module 语法？它难道不是由 node 执行吗？
       - 肯定是 node 执行，因为 vite 在读取 vite.config.js 的时候，会率先去解析文件语法，如果发现是 esm 规范，会直接将 esm 规范替换成 commonjs 规范
         - 但在 node 最新版本中，已经逐渐支持 esm 规范了，如果直接就支持的话，应该就不会做转换了
+
 
 7. vite 是如何让浏览器可以识别 .vue 文件的？
     - 这个其实偏向小白哈，浏览器可以加载 .vue 的文件，是因为浏览器向服务器要了这个文件，服务器就给了（这里是 vite 中的开发服务器）
     - 至于为什么能执行 .vue 文件，是因为服务器返回的这个文件，它的 Content-Type 是 text/javascript，浏览器就当 js 文件处理了
     - 事实上这个 .vue 文件里面确实是 js 代码，是由 vite 编译过的，而浏览器和服务器不会管你文件名叫什么，它们只关注文件类型是啥
     - 服务器在返回文件时，响应头会给出文件类型，而浏览器就根据文件类型去处理文件，就这么简单
+
 
 8. vite 中的 css 处理
    - 首先以 `.module.css` 结尾的文件会开启 css 模块化（是一种命名约定）
@@ -98,10 +105,12 @@
      - 所以目前 postcss 主要被用来做 css 语法降级、前缀补全，解决不同浏览器的兼容问题
      - 在 vite 中使用 postcss 非常简单，不需要额外安装任何包，只需要通过 `css.postcss` 直接进行配置即可
 
+
 9. vite 中处理静态资源
     - 像图片视频这样的静态资源默认都会导出 url，可以自行修改其导出的数据类型
     - 对于 json 文件，导出即可用，并且支持解构引用当中的某个字段
     - 对于 svg 文件，可以使用 raw 方式导出字符串使用
+
 
 10. 关于 resolve.alias 的原理
     - 首先 vite 会拿到配置文件，获取里面配置的 alias 映射
@@ -112,6 +121,7 @@
     - 最后返回 main.js 文件给浏览器，此时浏览器拿到的 main.js 文件中的引用已经是 `import A from '/src/js/a.js'` 了
     - 浏览器执行 main.js 文件，此时就可以正常发送请求 `http://127.0.0.1:5173/src/js/a.js` 拿到目标文件
     - 反正原理就是这样，至于这个替换的过程，应该还是需要考虑多种情况的，没太深入了解
+
 
 11. vite 中的自定义插件
     - 相比 webpack，更简单了，而且官方文档写的也很详细：https://cn.vitejs.dev/guide/api-plugin.html
@@ -126,10 +136,12 @@
         - 作用：支持使用 mock 数据
         - 代码：[vite-plugin-mock](./plugins/vite-plugin-mock/index.js)
 
+
 12. vite 中对 ts 的支持
     - 首先，vite 天生就是支持 ts 的，但是 ts 报错时，如果不进行额外的配置，还是会正常打包运行，不会造成堵塞
       - 如果想让 ts 报错造成阻塞，需要安装插件：`vite-plugin-checker`（这个插件依赖于 typescript 库），并在 vite.config.js 进行配置
     - 配置 `vite-env.d.ts` 文件可以声明 .env 内定义的变量，这样在写 `import.meta.env` 时，就会有代码提示
+
 
 13. 说一说性能优化
     - 对于构建工具而言，优化主要分为两种：构建速度优化、打包体积优化
@@ -155,6 +167,7 @@
         - 构建速度
         - 构建体积
 
+
 14. vite 中的打包优化
     - 使用类似 webpack 的 splitChunks 功能：`build.rollupOptions.output.manualChunks`，做代码分割
     - 对于体积很大的文件，使用 gzip 压缩，减小文件体积，需要安装插件：`vite-plugin-compression`
@@ -171,6 +184,7 @@
       - CDN 的加速主要体现在两点：
         - 浏览器可以在最近的站点获取资源，速度肯定更快
         - 去掉了 CDN 加载的资源，自己本身的资源体积也减小了
+
 
 15. vite 中做跨域代理
     - 首先有一个问题？
