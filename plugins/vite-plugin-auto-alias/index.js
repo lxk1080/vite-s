@@ -28,7 +28,7 @@ function getAutoAliasMaps(options) {
  */
 module.exports = (options = {}) => ({
   name: 'auto-alias',
-  // 这个地方的配置会和 vite.config.js 内的配置进行深度合并
+  // 这里的别名配置会和 vite.config.js 内的配置进行深度合并
   config: () => ({
     resolve: {
       alias: getAutoAliasMaps(options), // 如果有 key 值相同，这里写的会覆盖掉 vite.config.js 配置文件里的
