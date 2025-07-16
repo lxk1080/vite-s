@@ -87,8 +87,10 @@ export default defineConfig(({ command, mode }) => {
       postcss: {
         plugins: [
           // 将数据注入到 postcss 中，这可以让后续的插件将原生的 css 变量直接解析出来
+          //  - 这个是为了解决在 postcssPresetEnv 兼容 margin-bottom: var(--tenPixels) 代码时，找不到 --tenPixels 变量的问题
+          //  - 至于为什么找不到 --tenPixels 变量，可能是文件引入的顺序问题，也可能是 less 编译时的问题（反正有问题就用这个方法就好了）
           // 注意：这个插件一定要写在 postcssPresetEnv 插件前面，否则无效
-          //  - 它只将数据注入 PostCSS，以便其他插件可以实际使用它，它不会在 CSS 的输出中添加任何内容（所以注入晚了就没用了）
+          //  - 它只将数据注入 PostCSS，以便其他插件可以使用这份数据，它不会在 CSS 的输出文件中添加任何内容
           postcssGlobalData({
             files: [
               path.resolve(__dirname, './src/css/variables.css'),
