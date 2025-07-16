@@ -67,7 +67,7 @@ export default defineConfig(({ command, mode }) => {
         localsConvention: 'camelCase', // 生成驼峰式命名
         scopeBehaviour: 'local', // 默认值 local，设置模块化是全局还是区域，设置为全局的时候，就意味着关闭模块化
         // generateScopedName: '[name]_[local]_[hash:5]', // 生成的类名的规则，规则可以到 postcss 看，一般来讲也不会手动配置这个
-        hashPrefix: 'hahaha', // 生成 hash 时会带上这个前缀去生成（默认的 hash 主要是通过类名还有其它的一些字符串生成的）
+        hashPrefix: 'hahaha', // 生成 hash 时会带上这个前缀去生成（加盐，默认的 hash 主要是通过类名还有其它的一些字符串生成的）
         // globalModulePaths: ['./src/css/a.module.css'], // 不想参与到 css 模块化的路径（就变成全局的了），注意：这个地方不能识别通过 path.resolve 生成的路径格式
         // globalModulePaths: [path.resolve(__dirname, './src/css/a.module.css').replaceAll('\\', '/')], // 替换后是可行的
       },
