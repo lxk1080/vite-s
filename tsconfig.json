@@ -4,7 +4,7 @@
     "module": "ESNext", // 编译后的代码使用的模块化规范
     "target": "ES6", // 编译成什么版本的 ECMAScript 代码
     "sourceMap": true, // 是否生成 sourceMap
-    "skipLibCheck": true, // 跳过声明文件的类型检查（扩展名为 .d.ts 的文件）
+    "skipLibCheck": true, // 跳过 node_modules 目录的检查
 
     /* 如果 webstorm 不识别用 @ 别名开头的文件路径，可以尝试加以下两个字段 */
     //"baseUrl": ".",

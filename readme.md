@@ -140,7 +140,9 @@
 
 12. vite 中对 ts 的支持
     - 首先，vite 天生就是支持 ts 的，但是 ts 报错时，如果不进行额外的配置，还是会正常打包运行，不会造成堵塞
+      - 天生支持的意思：不需要安装 typescript 包，也不需要配置 tsconfig.json 文件，直接启动 vite 就可以识别 ts 语法（vite 应该是内置了一套 ts 编译器）
       - 如果想让 ts 报错造成阻塞，需要安装插件：`vite-plugin-checker`（这个插件依赖于 typescript 库），并在 vite.config.js 进行配置
+        - 可以使用 `tsc --init` 初始化 tsconfig.json 文件，里面的可配置属性会比较全
     - 配置 `vite-env.d.ts` 文件可以声明 .env 内定义的变量，这样在写 `import.meta.env` 时，就会有代码提示
 
 
