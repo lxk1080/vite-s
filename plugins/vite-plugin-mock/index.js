@@ -17,9 +17,11 @@ module.exports = (options = {}) => ({
       })
       if (target) {
         // 注意这里的 res 是 node 原生对象，不能使用 send、json 方法
+        // 扩展：res.end() 是个异步操作
         res.setHeader('Content-Type', 'application/json')
         return res.end(JSON.stringify(target.response(req)))
       }
+      // 未匹配到 mockApi 则继续往下走
       next()
     })
   },

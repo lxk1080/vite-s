@@ -177,7 +177,7 @@ export default defineConfig(({ command, mode }) => {
       }),
 
       // 可以让我们使用 mock 数据的插件
-      // 需要在根目录创建文件夹 mock，然后在里面创建文件写 mock 代码
+      // 需要在根目录创建文件夹 mock（默认的路径，可自行配置），然后在里面创建文件写 mock 代码
       // 此插件是依赖于 mockjs 库的
       // viteMockServe(),
 
