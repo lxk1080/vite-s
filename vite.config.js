@@ -2,7 +2,7 @@ import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import postcssPresetEnv from 'postcss-preset-env'
 import postcssGlobalData from '@csstools/postcss-global-data'
-import { viteMockServe } from 'vite-plugin-mock'
+// import { viteMockServe } from 'vite-plugin-mock'
 import checker from 'vite-plugin-checker'
 import compression from 'vite-plugin-compression'
 import CDNPlugin from 'vite-plugin-cdn-import'
@@ -149,12 +149,16 @@ export default defineConfig(({ command, mode }) => {
       // 可以将打包生成的文件 gzip 压缩，减少前后端传递静态文件时的文件体积（需要后端配合）
       compression(),
 
-      // 使用 CDN 加速，这个插件只在生产模式下生效
+      // 使用 CDN 加速，这个插件只在生产模式下生效，开发环境下还是使用本地模块
+      // 在这里配置的模块，vite 打包时不会打进去，原理是操作了 rollupOptions.external
+      // 注：我们这个项目里不止引用了 lodash，还引用了 lodash-es，所以在打包输出文件中我们还是可以看到 lodash 的相关代码哈，
+      //     这是 lodash-es 的代码，不是 lodash 的，可以把项目里 lodash-es 相关代码给注释了，再看打包文件，就没有 lodash 相关代码了，
+      //     这个插件是没问题的
       CDNPlugin({
         modules: [
           {
-            name: 'lodash', // 这个就是让 vite 打包时，不要把 lodash 打进去，原理就是操作了 rollupOptions.external
-            var: '_', // 定义个变量名称
+            name: 'lodash', // npm 包的名称，插件会依据此名称来判断项目是否引用了该包，如果没有引用，插件就不会在打包结果中添加对应的 CDN 引入代码
+            var: '_', // 该模块在全局作用域下的变量名
             path: 'https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.min.js', // CDN 地址会自动插入到 html 中
           }
         ],
