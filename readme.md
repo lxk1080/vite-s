@@ -186,22 +186,10 @@
       - 后端返回压缩包，需要设置响应头：`content-encoding => gzip`，浏览器拿到文件，会自动解压成原来的 js 文件
       - 注意：因为浏览器解压也是需要一定的时间的，所以，如果体积不是很大的话，就不用 gzip 压缩
     - 使用动态导入，就是那个 `import()` 方法，这个东西现在主要是用于动态加载路由
-      - `import()` 的实现原理是什么？（这里说下 webpack 的实现方式，因为 vite 的 import，使用的就是 ES Module 自带的动态导入语法，不好讲咋实现的）
+      - `import()` 的实现原理是什么？
         - 其实它就是一个异步的方法，执行 `import()` 返回一个 promise
-        - promise 里面会创建一个 `script`，设置 `script.src = 组件对应的 js 文件的请求路径`
-        - 然后将 script 标签插入到 document.head 里执行，就能拿到这个组件对应的文件，并执行文件内的 js 代码
-          - 这个 js 代码中，包含了模块的注册逻辑，注册完成后，webpack 就可以通过 `__webpack_require__(chunkId)` 拿到这个模块
-          - 了解下 Webpack 模块注册机制？
-            - 每个打包后的 JS 文件（包括异步 chunk）都包含一个模块注册函数（`__webpack_require__`），其核心作用是：
-              - 将模块内容存入 Webpack 的内部模块缓存（installedModules）
-              - 标记模块状态为「已加载」
-              - 提供模块导出接口
-            - 欲了解详情，可以看下 webpack5-s 下的 webpack 编译结果分析
-        - 当文件加载完成后，会响应 script.onload 事件，事件内执行 resolve 方法，返回文件内容
-          - 示例代码：`resolve(__webpack_require__(chunkId))`
-        - 所以我们可以这么写：`const module = await import('./module.js')`，import 并不是只能用在路由懒加载中哈
-        - 评价下：这里的加载，因为是动态的加载，所以肯定不能用 `import xxx from 'xxx'` 这种形式，再因为是浏览器环境，所以也不能用 `require`，
-          <br/> 所以只能使用 `script` 标签去加载，或者自己发送 http 请求去加载了，又因为加载后需要立即执行，所以使用 script 标签做动态加载实在是不二之选
+        - 事实上，vite 的 import 使用的就是 ES Module 自带的动态导入语法，不好讲咋实现的
+        - 如果有需要，可以看下 webpack 的实现方式，可以到 webpack5-s 中找到相关讲解
       - 动态加载路由组件的实现原理是啥？
         - 其实没啥原理，我们知道：
         - 动态加载的路由组件一般是这样写：`() => import('./page/AComponent')`
@@ -229,4 +217,7 @@
     - fs.watchFile
 
 
+
+
+ 
 <br/> 持续更新。。 <br/><br/>
