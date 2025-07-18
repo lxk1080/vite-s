@@ -192,10 +192,11 @@
         - 然后将 script 标签插入到 document.head 里执行，就能拿到这个组件对应的文件，并执行文件内的 js 代码
           - 这个 js 代码中，包含了模块的注册逻辑，注册完成后，webpack 就可以通过 `__webpack_require__(chunkId)` 拿到这个模块
           - 了解下 Webpack 模块注册机制？
-            - 每个打包后的 JS 文件（包括异步 chunk）都包含一个模块注册函数，其核心作用是：
+            - 每个打包后的 JS 文件（包括异步 chunk）都包含一个模块注册函数（`__webpack_require__`），其核心作用是：
               - 将模块内容存入 Webpack 的内部模块缓存（installedModules）
               - 标记模块状态为「已加载」
               - 提供模块导出接口
+            - 欲了解详情，可以看下 webpack5-s 下的 webpack 编译结果分析
         - 当文件加载完成后，会响应 script.onload 事件，事件内执行 resolve 方法，返回文件内容
           - 示例代码：`resolve(__webpack_require__(chunkId))`
         - 所以我们可以这么写：`const module = await import('./module.js')`，import 并不是只能用在路由懒加载中哈
